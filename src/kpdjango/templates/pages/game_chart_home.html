@@ -1,0 +1,80 @@
+{% load i18n static simpletags %}
+
+<div id="home">
+
+    <el-row class="info-card">
+ 
+            <el-col :span="24"> 
+
+                <el-card class="box-card">
+                    <div slot="header" class="clearfix">
+                        <i class="fas fa-link"></i>
+                        <span v-text="getLanuage('Quick navigation')"></span>
+                    </div>
+                    <div class="clearfix"> 
+
+                        <div v-for="(c,j) in models" :key="c.name" class="quick-wrap">
+                            <a href="javascript:;" @click="openTab(c,(j+1)+'')">
+                                <span class="icon" :class="c.icon"></span>
+                                <span class="card-name" v-text="c.name"></span>
+                            </a>
+                        </div>
+ 
+                    </div>
+                </el-card>
+            </el-col> 
+ 
+    </el-row>
+
+
+    <el-card class="timeline">
+        <div slot="header" class="clearfix">
+            <span>{% trans 'Recent actions' %}</span>
+            <el-button v-waves style="float: right; padding: 3px 0" type="text"
+                       :icon="timeline?'el-icon-arrow-up':'el-icon-arrow-down'"
+                       @click="displayTimeline()"></el-button>
+        </div>
+        {% load log %}
+        {% get_admin_log 10 as admin_log for_user user %}
+        {% if admin_log %}
+        <transition name="el-zoom-in-top">
+            <div class="block" v-if="timeline">
+                <el-timeline>
+                    {% for entry in admin_log %}
+                    <el-timeline-item timestamp="{{ entry.action_time }}" placement="top">
+                        <el-card>
+                            <p>{{ entry.user }} {{ entry.action_time }}</p>
+                            <h4>{{ entry.content_type }}: {{ entry }}</h4>
+                        </el-card>
+                    </el-timeline-item>
+                    {% endfor %}
+                </el-timeline>
+            </div>
+        </transition>
+        {% endif %}
+    </el-card>
+</div>
+
+<el-dialog
+        title="Upgrade Simpleui"
+        :visible.sync="upgrade.dialogVisible"
+        width="50%">
+    <el-alert
+            :title="'You can upgrade to '+upgrade.version"
+            type="success">
+    </el-alert>
+    <div style="padding: 10px">
+        <div>
+            <h3>
+            Run Command:
+            </h3>
+            <el-alert
+                title="pip install django-simpleui -U"
+                type="info">
+              </el-alert>
+
+        </div>
+        <div><h3>Change logs:</h3></div>
+        <div v-text="upgrade.body"></div>
+    </div>
+</el-dialog>

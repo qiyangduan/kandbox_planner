@@ -1,0 +1,185 @@
+{% load i18n %}
+{% load admin_urls static admin_list simpletags %}
+<div class="actions">  
+    <input type="hidden" name="action" value=""/>
+
+
+    <el-button type="primary" icon="el-icon-caret-right" 
+         @click.native="stepClick">
+        {% trans 'Step' %}
+    </el-button>
+    Job_code: initial (why not showing? 2020-04-23 07:22:20)
+
+    <el-button-group class="btn-group">
+        {% if cl.search_fields or cl.has_filters %}
+        <a href="javascript:;" @click="searchDisplay()" class="el-button el-button--default"><span
+                class="el-icon-search"></span></a>
+        {% endif %}
+        <a href="javascript:;" @click="reload()" class="el-button el-button--default"><span
+                class="el-icon-refresh"></span></a>
+        <a href="javascript:;" @click="openNewPage()" class="el-button el-button--default"><span
+                class="el-icon-news"></span></a>
+
+    </el-button-group>
+
+</div>
+<script type="text/javascript" src="{% static '/admin/simpleui-x/automatic/dicts.js' %}"></script>
+<script type="text/javascript" src="{% static '/admin/simpleui-x/automatic/segment.js' %}"></script>
+<script type="text/javascript">
+
+
+    var _action = new Vue({
+        el: '.actions',
+        data: {
+            select_across: 0,
+            file_format: 1,
+            show: true, 
+            customButton:{% autoescape off %}{% custom_button %}{% endautoescape %},
+            exts: []
+        },
+        created() {
+            if (localStorage && typeof (localStorage.searchStatus) != 'undefined') {
+                this.show = localStorage.searchStatus == 'true';
+            }
+        },
+        watch: {
+            'show': function (newValue) {
+                obj = document.querySelector('.xfull')
+                if (!newValue) {
+                    //隐藏
+                    document.getElementById('toolbar').style.display = 'none';
+                    if (obj) {
+                        obj.style.display = 'none';
+                    }
+                } else {
+                    //显示
+                    document.getElementById('toolbar').style.display = 'inherit';
+                    if (obj) {
+                        obj.style.display = 'inherit';
+                    }
+                }
+                if (localStorage) {
+                    localStorage['searchStatus'] = newValue;
+                }
+            }
+        },
+        methods: {
+            searchDisplay: function () {
+
+                this.show = !this.show;
+
+            },
+            reload: function () {
+                window.location.reload()
+            },
+            openNewPage: function () {
+                window.open(window.location.href)
+            },
+            getIcon: getIcon,
+            stepClick: function (item) {
+                axios.post('/kpdata/games', {
+                        name: this.name,
+                        email: this.email,
+                        caps: this.caps
+                    }).then(response => {
+                        console.log(response)
+                        //this.response = JSON.stringify(response, null, 2)
+
+                    });
+            },
+            formSubmit: function () {
+                $("#changelist-form").submit();
+            } 
+        }
+    });
+
+    function selectAll() {
+        _action.select_across = 1;
+    }
+
+    function unSelect() {
+        _action.select_across = 0;
+    }
+
+
+    $(function () {
+        $(".actions button[data-name!='delete_selected']").click(function () {
+            var url = $(this).attr("url");
+            var eid = $(this).attr('eid');
+            var confirm = $(this).attr('confirm');
+
+            if (confirm) {
+                new Vue().$confirm(confirm, '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => done.call(this));
+
+            } else {
+                done.call(this)
+            }
+
+            function done() {
+
+                if (eid) {
+                    for (var i in _action.customButton) {
+                        var temp = _action.customButton[i];
+                        if (temp.eid == eid) {
+
+                            if (typeof (temp.action_type) != 'undefined') {
+
+                                if (!temp.action_url) {
+                                    this.$notify({
+                                        title: 'error',
+                                        message: 'action must contain attributes:action_url! ',
+                                        type: 'error',
+                                        dangerouslyUseHTMLString: true
+                                    });
+                                    return;
+                                }
+
+                                switch (temp.action_type) {
+                                    case 0:
+                                        window.location.href = temp.action_url;
+                                        break;
+                                    case 1:
+                                        parent.window.app.openTab({
+                                            url: temp.action_url,
+                                            icon: temp.icon || 'fa fa-file',
+                                            name: temp.short_description,
+                                            breadcrumbs: []
+                                        });
+                                        break;
+                                    case 2:
+                                        window.open(temp.action_url)
+                                        break;
+                                }
+                                console.log('中断后续操作')
+                                return;
+                            }
+                        }
+                    }
+                }
+                if (url) {
+                    window.location.href = url;
+                    return;
+                }
+
+                if ($(this).attr('data-name')) {
+                    var name = $(this).attr("data-name");
+                    $("#changelist-form input[name='action']").val(name);
+
+                    $("#changelist-form [name='_save']").removeAttr('name');
+
+                    $("#changelist-form [name!='']").each(function () {
+                        var obj = $(this);
+                        if (obj.attr('name') && obj.attr('name').indexOf('form-') == 0) {
+                            obj.removeAttr('name');
+                        }
+                    });
+                }
+                $("#changelist-form").submit();
+            }
+        });
+    });
+</script>

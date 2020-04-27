@@ -1,0 +1,58 @@
+{% extends 'admin/login.html' %}
+<!--
+    重写页面文档
+    https://github.com/newpanjing/simpleui/blob/master/QUICK.md#%E9%87%8D%E5%86%99%E9%A1%B5%E9%9D%A2
+-->
+{% block head %}
+{#重写head block 可以添加自己的一些头部元素，例如seo信息等#}
+    <meta name="keywords" content="simpleui,django">
+    <meta name="description" content="s">
+{% endblock %}
+
+
+{% block header %}
+    <div class="header">{{ site_header }}</div>
+
+        <div slot="title">
+         
+        <div>Welcome to a world where AI can help plan things ...</div> 
+        </div> 
+{% endblock %}
+
+
+{% block particles %}
+    {{ block.super }}
+    <!-- 重写login页面的block 添加自己的脚本 -->
+    <script type="text/javascript">
+        window.addEventListener('load', function () {
+            if(loginApp){
+                //loginApp.username = 'admin';
+                //loginApp.password = 'admin';
+            }
+        });
+        // https://stackoverflow.com/questions/1458724/how-do-i-set-unset-a-cookie-with-jquery
+        function setCookie(key, value, expiry) {
+            var expires = new Date();
+            expires.setTime(expires.getTime() + (expiry * 24 * 60 * 60 * 1000));
+            document.cookie = key + '=' + value + ';expires=' + expires.toUTCString();
+        }
+
+        function getCookie(key) {
+            var keyValue = document.cookie.match('(^|;) ?' + key + '=([^;]*)(;|$)');
+            return keyValue ? keyValue[2] : null;
+        }
+
+        function eraseCookie(key) {
+            var keyValue = getCookie(key);
+            setCookie(key, keyValue, '-1');
+        }
+        /*
+        setCookie('test_duan','1','1'); //(key,value,expiry in days)
+        setCookie('theme','/static/admin/simpleui-x/theme/e-red-pro.css','10'); //(key,value,expiry in days)
+        setCookie('theme_name','Enterprise red pro','10'); //(key,value,expiry in days)
+        */
+
+
+    
+    </script>
+{% endblock %}

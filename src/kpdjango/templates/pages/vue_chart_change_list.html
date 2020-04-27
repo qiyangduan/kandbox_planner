@@ -1,0 +1,393 @@
+{% extends "admin/base_site.html" %}
+{% load i18n admin_urls static admin_list %}
+
+{% block extrastyle %}
+{{ block.super }}
+<link rel="stylesheet" type="text/css" href="{% static "admin/css/changelists.css" %}?_=20180905"/>
+{# <link rel="stylesheet" type="text/css" href="{% static " admin/simpleui/layui/css/layui.css" %}"/>#}
+{% if cl.formset %}
+<link rel="stylesheet" type="text/css" href="{% static "admin/css/forms.css" %}"/>
+{% endif %}
+{% if cl.formset or action_form %}
+<script type="text/javascript" src="{% url 'admin:jsi18n' %}"></script>
+{% endif %}
+{{ media.css }}
+{% if not actions_on_top and not actions_on_bottom %}
+<style>
+    #changelist table thead th:first-child {
+        width: inherit
+    }
+</style>
+{% endif %}
+{% endblock %}
+
+{% block extrahead %}
+{{ block.super }}
+{{ media.js }}
+{% endblock %}
+
+{% block bodyclass %}{{ block.super }} app-{{ opts.app_label }} model-{{ opts.model_name }} change-list{% endblock %}
+
+{% if not is_popup %}
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+    <a href="{% url 'admin:index' %}">{% trans 'Home' %}</a>
+    &rsaquo; <a
+        href="{% url 'admin:app_list' app_label=cl.opts.app_label %}">{{ cl.opts.app_config.verbose_name }}</a>
+    &rsaquo; {{ cl.opts.verbose_name_plural|capfirst }}
+</div>
+{% endblock %}
+{% endif %}
+
+{% block coltype %}flex{% endblock %}
+{% block content_title %}
+
+{% endblock %}
+{% block content %}
+<style>
+    #content {
+        position: relative;
+    }
+
+    .object-tools {
+        position: absolute;
+        top: 16px;
+        right: 20px;
+        height: 50px;
+        z-index: 2;
+    }
+
+    .object-tools .import_link, .object-tools .export_link {
+        color: white !important;
+    }
+
+</style>
+{% block object-tools %}
+<ul class="object-tools">
+    {% block object-tools-items %}
+    {% if has_add_permission %}
+    {{ block.super }}
+    {% endif %}
+    {% endblock %}
+</ul>
+{% endblock %}
+
+<div id="content-main">
+
+    <div class="module{% if cl.has_filters %} filtered{% endif %}" id="changelist">
+
+            {% if False %}
+            {% block search %}{% search_form cl %}{% endblock %}
+            {% endif %}
+
+            {% if True %}
+            {% block search_ %} {% include "pages/vue_chart_search_form.html" %}{% endblock %}
+            {% endif %}
+
+        
+        {% block date_hierarchy %}{% date_hierarchy cl %}{% endblock %}
+
+        <form id="changelist-form" method="post"{% if cl.formset.is_multipart %}
+                enctype="multipart/form-data"{% endif %} novalidate>{% csrf_token %}
+            {% if cl.formset %}
+                <div>{{ cl.formset.management_form }}</div>
+            {% endif %} 
+
+            {% block result_list %}
+
+            {# {% if action_form %}#}
+            {% admin_actions %}
+            {# {% endif %}#}
+
+            {% endblock %}
+        </form>
+{# {############################################################################## }#}
+{# {############################################################################## }#}
+
+
+
+
+
+{% block planner_content %}
+<link rel="stylesheet" href="/static/orig_static/css/adminlte.min.css">
+
+
+<!--OpenStreetMap Modal, to show travel routes -->
+<div class="modal fade " id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog  modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+         
+        <h5 class="modal-title" id="myModalLabel">Routing path from Job () to Job ()</h5>
+      </div>
+      <div class="modal-body">
+
+        <!-- map container    width: 770px -->
+        <div id="map" style="height: 420px;"></div>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<!--new job planning Modal -->
+<div class="modal fade " id="newJobPlanModal" tabindex="-1" role="dialog" aria-labelledby="newJobPlanModalLabel">
+  <div class="modal-dialog  modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="newJobPlanModal_jobCode_label">Candidate Timeslots</h5>
+      </div>
+      <div class="modal-body">
+        <form container >  
+        <form>
+          <div class="form-group  col-md-2">
+            <label for="recipient-name" class="col-form-label">Job Type:</label>  
+            <input type="text" class="form-control" id="newJobPlanModal_job_type" disabled>
+          </div>
+          <div class="form-group   col-md-4">
+            <label for="message-text" class="col-form-label">Start:</label>
+            <input type="text" class="form-control" id="newJobPlanModal_scheduled_start_datetime">
+          </div> 
+          <div class="form-group   col-md-6">
+            <label for="message-text" class="col-form-label">Assigned to:</label>
+            <input type="input" class="form-control" id="newJobPlanModal_scheduled_worker_code" value='Test1111'>
+          </div>
+        </form> 
+
+        <table class="table table-bordered" >
+          <tbody   id="newJobPlanModal_tableBody"><tr>
+            <th style="width: 10px">#</th>
+            <th>Scheduled Worker</th>
+            <th>Start Time</th>
+            <th style="width: 40px">Probability</th>
+          </tr>
+          <tr>
+            <td>1.</td>
+            <td>B012</td>
+            <td>2020-01-23T09:30:00 </td>
+            <td><span class="badge bg-red">55%</span></td>
+          </tr> 
+        </tbody></table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!--query form -->
+        <div  class="col-md-12">
+            <!-- general form elements  style="display:none"    id="original_search_form" --> 
+            <br>
+            <div class="card"   style="display:none"   > 
+              <!-- form start -->
+              <form role="form"  action="#never_trigger" method="post">
+                <div id="query_form_div" class="card-body"> 
+                    <!-- Date range -->
+                    <input type="hidden" id="source_system_code" name="source_system_code" value="toy">
+                    <div class="row"> 
+                    
+                    <div class="form-group  col-md-1">
+                        <label>Planner:</label>
+                        <select class="form-control"  id="planner_code"  value="latest"  onchange="changeGameListByPlanner()">
+                          <option>latest</option> 
+                        </select>
+                      </div>
+
+                    <div class="form-group col-md-2" >
+                        <label for="game_code">Batch Code (Game)</label> 
+                        <select class="form-control"  id="game_code"  value="latest"> 
+                          <option>latest</option>
+                        </select>
+                    </div>  
+
+                    
+                    <div class="form-group  col-md-1">
+                            <label for="start_date">Start</label>
+                            <input type="text" class="form-control" id="start_date" value="20200123" placeholder="20190101">
+                        </div>
+                    <div class="form-group  col-md-1">
+                            <label for="end_date">End</label>
+                            <input type="text" class="form-control" id="end_date"  value="20200125" placeholder="20190101">
+                        </div>
+
+                    <div class="form-group  col-md-1">
+                          <label for="team_code">Team</label>
+                          <input disabled type="text" class="form-control" id="team_code"  value="Pest" placeholder="20190101">
+                      </div>
+
+                      <div class="form-group  col-md-4">
+                          <label for="worker_list">Worker List (empty for all)</label>
+                          <input type="text" class="form-control" id="worker_list" value="" placeholder="List of worker_code (no space), e.g. Duan,Tom,...">
+                        </div>
+                        <!--div class="form-group  col-md-2"     B127,B042,B027,B167,BT92,BT94,B001,B006,B005,B010,B026,B036,B025,B004,BF09,B009,BT80,B040,BT83,B038,BT86,BT81,BT91,B076,BT85,B080,B081,BT93,BT78,B028,BT82,B023,B059,B074,B041,B073,B128,BT95,BT90>
+                            <label for="exampleInputEmail1">Planner</label>
+                            <input type="text" class="form-control" id="planner_code"  value="orig" placeholder="opti">
+                        </div-->
+
+                    
+                    <div class="form-group col-md-2 align-bottom" >
+                      <button type="button" class="btn btn-primary  btn-sm"  onclick="load_Data_and_Draw()">Load</button> 
+                      <button type="button" class="btn btn-warning  btn-sm"  onclick="try_parameters()">Try</button> 
+                      
+                      <br> 
+                  </div>             
+                </div>
+                </div>
+                <!-- /.card-body -->
+              </form>
+
+          </div>
+            <!-- /.card -->
+
+<!--Timeline chart     <h3 class="card-title"></h3>   -->
+            <div class="card" >
+                <div class="card-header border-0">
+
+                  <div class="row"> 
+
+                  <div class="col-md-2 form-group">   <h3 class="card-title">Planned Jobs  </h3> 
+
+                  </div>
+                  
+                  <div class="col-md-2 form-group">
+                    <select class="form-control form-control-sm"  id="click_behaviour"  value="check_map"  onchange="onChangeDragBehaviour()">
+                      <option>check_map</option>
+                      <option>show_job</option>                     
+                      <option>drag_n_drop</option>
+                    </select>
+  
+                  </div>
+ 
+                  <div class="col-md-7 form-group float-right"  >
+
+                    <div class="card-tools"> 
+                      <span id="legend_buttons" class="text-center">
+                      <!--button id="legend_button_FS"  class="btn btn-sm btn-default" type="button">FS</button>
+                      <button id="legend_button_N"  class="btn  btn-sm btn-default" type="button" 
+                          > Normal Visits</button --  --> 
+                    </span>
+                    <!--a href="#" class="btn btn-sm btn-tool">
+                      <i class="fas fa-download" onclick="download_as_image()"></i>
+                    </a-->
+                    
+                    </div>
+                      
+                     
+                  </div>
+                </div>
+                </div>
+                <div class="card-body" > 
+                    <div id="jobs_timeline" style="height:850px;" ></div> 
+                </div>
+            </div>
+
+            <div class="card" >
+              <div class="card-header border-0">
+                 <h3 class="card-title">Not Planned Jobs  </h3> 
+
+              </div> 
+
+              <div class="card-body  col-md-12" > 
+            <table id="jobs_datatable"  class="table table-striped table-bordered " style="width:100%">
+              <thead>
+                  <tr> 
+                    <th>Job Code  </th>                                  
+                    <th>Start Time</th>                                    
+                    <th>End </th>                                     
+                    <th>Job Code</th>                  
+                      <th>1</th>                   
+                      <th>T2</th>                                    
+                      <th>c3 </th>                  
+                      <th>action</th>               
+                                    
+                  </tr>
+              </thead> 
+          </table>
+        </div>
+        </div>
+
+      </div>
+        <!-- /.col-md-12  <th>action 2</th>   -->
+
+
+{% endblock planner_content %}
+
+
+
+
+
+
+
+
+{% block local_javascript %}
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script >
+                        axios.defaults.xsrfCookieName = 'csrftoken'
+                        axios.defaults.xsrfHeaderName = "X-CSRFTOKEN"
+</script>
+
+
+      <!-- Bootstrap JS and its dependencies-->
+      <!-- jQuery -->
+      <script src="/static/orig_static/adminlte3/plugins/jquery/jquery.min.js"></script>
+      <!-- Bootstrap -->
+      <script src="/static/orig_static/adminlte3/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+      <!-- AdminLTE -->
+      <script src="/static/orig_static/adminlte3/dist/js/adminlte.js"></script>
+
+
+
+<script src="/static/vendor/echarts4.6.js"></script>
+
+<script type="text/javascript" src="/static/orig_static/datatablesjs/datatables.js"></script>
+<link rel="stylesheet" type="text/css" href="/static/orig_static/datatablesjs/datatables.css" />
+
+
+
+<link rel="stylesheet" href="/static/vendor/leaflet_131/leaflet.css" />
+<link rel="stylesheet" href="/static/vendor/leaflet-routing-machine/leaflet-routing-machine.css" />
+<link rel="stylesheet" href="/static/kp/kprouting/index.css" />
+
+<script src="/static/vendor/leaflet_131/leaflet.js"></script>
+<script src="/static/vendor/leaflet-routing-machine/leaflet-routing-machine.js"></script>
+<script src="/static/kp/kprouting/Control.Geocoder.js"></script>
+<script src="/static/kp/kprouting/config.js"></script>
+<script src="/static/kp/kprouting/index.js"></script>
+<script type="text/javascript" src="/static/kp/kprouting/Leaflet.Icon.Glyph.js"></script>
+
+
+<script src="/static/orig_static/kpdatajs/draggable_real_time_planner.js"></script>
+
+{% endblock local_javascript %}
+
+
+
+
+
+
+
+{# {############################################################################## }#}
+{# {############################################################################## }#}
+
+            {# result_list cl #}
+
+    </div>
+</div>
+<script type="text/javascript">
+    $(".object-tools").hide().find('li a').each(function () {
+        _action.exts.push({
+            name: $(this).text(),
+            url: $(this).attr('href')
+        })
+    })
+
+</script>
+{% endblock %}

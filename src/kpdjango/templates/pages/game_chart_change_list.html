@@ -1,0 +1,431 @@
+{% extends "admin/base_site.html" %}
+{% load i18n admin_urls static admin_list %}
+
+{% block extrastyle %}
+    {{ block.super }}
+    <link rel="stylesheet" type="text/css" href="{% static "admin/css/changelists.css" %}?_=20180905"/>
+    {#    <link rel="stylesheet" type="text/css" href="{% static "admin/simpleui/layui/css/layui.css" %}"/>#}
+    {% if cl.formset %}
+        <link rel="stylesheet" type="text/css" href="{% static "admin/css/forms.css" %}"/>
+    {% endif %}
+    {% if cl.formset or action_form %}
+        <script type="text/javascript" src="{% url 'admin:jsi18n' %}"></script>
+    {% endif %}
+    {{ media.css }}
+    {% if not actions_on_top and not actions_on_bottom %}
+        <style>
+            #changelist table thead th:first-child {
+                width: inherit
+            }
+        </style>
+    {% endif %}
+{% endblock %}
+
+{% block extrahead %}
+    {{ block.super }}
+    {{ media.js }}
+{% endblock %}
+
+{% block bodyclass %}{{ block.super }} app-{{ opts.app_label }} model-{{ opts.model_name }} change-list{% endblock %}
+
+{% if not is_popup %}
+    {% block breadcrumbs %}
+        <div class="breadcrumbs">
+            <a href="{% url 'admin:index' %}">{% trans 'Home' %}</a>
+            &rsaquo; <a
+                href="{% url 'admin:app_list' app_label=cl.opts.app_label %}">{{ cl.opts.app_config.verbose_name }}</a>
+            &rsaquo; {{ cl.opts.verbose_name_plural|capfirst }}
+        </div>
+    {% endblock %}
+{% endif %}
+
+{% block coltype %}flex{% endblock %}
+{% block content_title %}
+
+{% endblock %}
+{% block content %}
+
+
+    <style>
+        #content {
+            position: relative;
+        }
+
+        .object-tools {
+            position: absolute;
+            top: 16px;
+            right: 20px;
+            height: 50px;
+            z-index: 2;
+        }
+
+        .object-tools .import_link, .object-tools .export_link {
+            color: white !important;
+        }
+
+    </style>
+
+
+
+    <style>
+    .text {
+        font-size: 14px;
+    }
+
+    .item {
+        margin-bottom: 18px;
+    }
+
+    .clearfix:before,
+    .clearfix:after {
+        display: table;
+        content: "";
+    }
+    .clearfix:after {
+        clear: both
+    }
+
+    </style>
+
+
+    {% block object-tools %}
+        <ul class="object-tools">
+            {% block object-tools-items %}
+                {% if False %} {#has_add_permission#}
+                    {{ block.super }}
+                {% endif %}
+            {% endblock %}
+        </ul>
+    {% endblock %}
+
+    <div id="content-main">
+
+        {% if cl.formset.errors %}
+            <p class="errornote">
+                {% if cl.formset.total_error_count == 1 %}{% trans "Please correct the error below." %}{% else %}
+                    {% trans "Please correct the errors below." %}{% endif %}
+            </p>
+            {{ cl.formset.non_form_errors }}
+        {% endif %}
+        <div class="module{% if cl.has_filters %} filtered{% endif %}" id="changelist">
+            {% block search %}{% search_form cl %}{% endblock %} 
+            {% block date_hierarchy %}{% date_hierarchy cl %}{% endblock %}
+
+            <form id="changelist-form" method="post"{% if cl.formset.is_multipart %}
+                  enctype="multipart/form-data"{% endif %} novalidate>{% csrf_token %}
+                {% if cl.formset %}
+                    <div>{{ cl.formset.management_form }}</div>
+                {% endif %}
+
+                {% block result_list %}   {#  {% admin_actions %}   {% result_list cl %} #}
+                
+                {% include './game_chart_actions.html' %}
+
+                <div id="jobs_timeline" style="height:850px;" >
+                </div> 
+
+                {% endblock %}
+
+
+                {% block pagination %} {% endblock %}
+            </form>
+        </div>
+
+
+    </div>
+    <br>
+
+<div id="kp_main_app">
+<div id="home_">
+    <el-row class="info-card">
+
+        <el-col :span="24">
+            <el-card class="box-card">
+                <div slot="header" class="clearfix">
+                    <span>卡片名称</span>
+                    <el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button>
+                </div>
+
+                <div v-for="o in 4" :key="o" class="text item">
+                    *{ '列表内容 ' + o }*
+                </div>
+                <el-button @click="visible = true">Button</el-button>
+                <el-dialog :visible.sync="visible" title="Hello world">
+                    <p>Try Element</p>
+                </el-dialog>
+
+            </el-card>
+        </el-col>
+
+        <el-col :span="24"> <div class="grid-content bg-purple-light">
+
+
+            <el-card class="box-card">
+
+            <el-tag
+                v-for="(jobType, jobKey) in job_types"
+                :key="jobKey" 
+                type="info"
+                hit='false'
+                effect="dark"
+                :color="jobType.color">
+                *{ jobType["name"] }*
+                </el-tag>
+                
+            </el-card>
+        </div></el-col>
+
+        <el-col :span="24">  
+            <el-card class="box-card">
+                <div slot="header" class="clearfix">
+                    <span>Datatables from: https://codesandbox.io/s/846y0pnkmj</span>
+                    <el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button>
+                </div>
+                <div>
+                    <el-table
+                    v-loading="loading"
+                    :data="tableData"
+                    v-bind="$attrs"
+                    v-on="listeners"
+                    style="width: 100%">
+                    <slot name="columns">
+                        <el-table-column
+                        :sortable="column.sortable ? 'custom' : false"
+                        v-for="column in columns"
+                        :key="column.prop"
+                        v-bind="column"
+                        >
+                        <template slot-scope="{row}">
+                            <slot :name="column.prop || column.type || column.label" :row="row">
+                            *{ row[column.prop] }*
+                            </slot>
+                        </template>
+                        </el-table-column>
+                    </slot>
+                    </el-table>
+                    <slot name="pagination" :page="page" :total="total">
+                    <el-pagination 
+                        v-model="page"
+                        :total="total"
+                        @current-change="getTableData"
+                        layout="prev, pager, next"
+                        >
+                    </el-pagination>
+                    </slot>
+                </div>
+
+            </el-card>
+        </el-col>
+
+        <el-col :span="24">  
+            <el-card class="box-card">
+                <div slot="header" class="clearfix">
+                    <span>称</span>
+                    <el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button>
+                </div>
+                
+                <el-table
+                    :data="tableData_1"
+                    style="width: 100%"
+                    :row-class-name="tableRowClassName">
+                    <el-table-column
+                    prop="date"
+                    label="日期"
+                    width="180">
+                    </el-table-column>
+                    <el-table-column
+                    prop="name"
+                    label="姓名"
+                    width="180">
+                    </el-table-column>
+                    <el-table-column
+                    prop="address"
+                    label="地址">
+                    </el-table-column>
+                </el-table> 
+
+            </el-card>
+        </el-col>
+
+    </el-row>
+</div>
+
+<el-row>
+  <el-col :span="24"><div class="grid-content bg-purple-dark"></div></el-col>
+</el-row>
+<el-row>
+  <el-col :span="12"><div class="grid-content bg-purple"></div></el-col>
+  <el-col :span="12"><div class="grid-content bg-purple-light"></div></el-col>
+</el-row>
+</div>
+
+
+
+<style>
+  .el-table .warning-row {
+    background: oldlace;
+  }
+
+  .el-table .success-row {
+    background: #f0f9eb;
+  }
+</style>
+
+<style>
+  .el-row {
+    margin-bottom: 20px;
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+  .el-col {
+    border-radius: 4px;
+  }
+  .bg-purple-dark {
+    background: #99a9bf;
+  }
+  .bg-purple {
+    background: #d3dce6;
+  }
+  .bg-purple-light {
+    background: #e5e9f2;
+  }
+  .grid-content {
+    border-radius: 4px;
+    min-height: 36px;
+  }
+  .row-bg {
+    padding: 10px 0;
+    background-color: #f9fafc;
+  }
+</style>
+
+
+
+<script src="/static/vendor/echarts.js"></script>
+<script src="/static/jobs_timeline/draggable_real_time_planner.js"></script>
+
+
+    <script type="text/javascript">
+        $(".object-tools").hide().find('li a').each(function () {
+            _action.exts.push({
+                name:$(this).text(),
+                url:$(this).attr('href')
+            })
+        })
+
+    </script>
+
+<!-- import Vue before Element -->
+  <script src="https://unpkg.com/vue/dist/vue.js"></script>
+  <!-- import JavaScript -->
+  <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+  <script>
+   
+    new Vue({
+      el: '#kp_main_app', 
+      delimiters: ['*{', '}*'],
+      data: function() {
+        return { 
+            visible: false,
+            job_types: {
+                FS: { name: 'Fixed Schedule', color: '#7b9ce1' },
+                FD: { name: 'Fixed Day', color: 'rgb(111, 160, 199)' },
+                N: { name: 'Normal', color: '#72b362' }
+            },
+            tableData_1: [{
+                date: '2016-05-02',
+                name: '王小虎',
+                address: '上海市普陀区金沙江路 1518 弄',
+                }, {
+                date: '2016-05-04',
+                name: '王小虎',
+                address: '上海市普陀区金沙江路 1518 弄'
+                }, {
+                date: '2016-05-01',
+                name: '王小虎',
+                address: '上海市普陀区金沙江路 1518 弄',
+                }, {
+                date: '2016-05-03',
+                name: '王小虎',
+                address: '上海市普陀区金沙江路 1518 弄'
+                }],
+            page: 1,
+            total: 10,
+            sortParams: [],
+            loading: false,
+            columns: [
+                {
+                type: "expand"
+                },
+                {
+                prop: "name",
+                label: "Name",
+                minWidth: "100",
+                sortable: true
+                },
+                {
+                prop: "email",
+                label: "Email",
+                minWidth: "100"
+                },
+                {
+                prop: "salary",
+                label: "Salary",
+                minWidth: "100"
+                },
+                {
+                prop: "gender",
+                label: "Gender",
+                minWidth: "80",
+                sortable: true
+                },
+                {
+                fixed: "right",
+                label: "Operations",
+                width: "150"
+                }
+            ],
+            tableData: [{"id":1,"name":"Noelia O'Kon","nickname":"asperiores","email":"otho.smitham@example.com","birthdate":"1978-06-28 00:00:00","gender":"F","salary":"13098.00","group_id":2,"created_at":"2017-01-01 07:21:10","updated_at":"2017-01-01 07:21:10","age":41,"group":{"id":2,"name":"Exec","description":"Executives"},"address":{"id":1,"user_id":1,"line1":"0888 Aniyah Locks\nLake Bridie, NJ 51086","line2":"Cayman Islands","zipcode":"92991-2805","mobile":"1-742-816-9238x848","fax":"(484)438-4697x8638"}},{"id":2,"name":"Mr. Enid Von PhD","nickname":"alias","email":"pollich.cecilia@example.com","birthdate":"1990-09-18 00:00:00","gender":"M","salary":"35978.00","group_id":4,"created_at":"2017-01-01 07:21:10","updated_at":"2017-01-01 07:21:10","age":29,"group":{"id":4,"name":"Sup","description":"Supervisors"},"address":{"id":2,"user_id":2,"line1":"59732 Iva Spur Suite 468\nEast Hortenseton, VA 70087","line2":"Cayman Islands","zipcode":"41967","mobile":"1-913-407-7558x503","fax":"(388)906-8002"}},
+            ],
+        }
+      },
+      methods: {
+            tableRowClassName({row, rowIndex}) {
+                if (rowIndex === 1) {
+                return 'warning-row';
+                } else if (rowIndex === 3) {
+                return 'success-row';
+                }
+                return '';
+            },
+            getTableData({ page, query, sortParams }) {
+                console.log("loaded page: ", page);
+                return axios
+                    .get("https://vuetable.ratiw.net/api/users", {
+                        params: {
+                        page,
+                        sort: sortParams
+                        }
+                    })
+                    .then(response => {
+                        let { data } = response;
+                        return {
+                            data: data.data,
+                            total: data.total
+                        };
+                    });
+            },
+            handleEdit(row) {
+                this.$confirm(`Editing ${row.name}. This won't do anything`).catch(
+                    _ => {}
+                );
+            },
+                
+            },
+    })
+  </script>
+
+
+
+{% endblock %}
