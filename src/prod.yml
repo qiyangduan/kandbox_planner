@@ -15,7 +15,7 @@ services:
     command: /gunicorn.sh
     entrypoint: /entrypoint.sh
     restart: on-failure
-    env_file: .env
+    env_file: env
 
   postgres:
     image: postgres:10-alpine
@@ -23,7 +23,7 @@ services:
       - postgres_data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
-    env_file: .env
+    env_file: env
 
   nginx:
     build:
