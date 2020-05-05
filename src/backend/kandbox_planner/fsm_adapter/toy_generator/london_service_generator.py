@@ -114,7 +114,7 @@ def select_all_workers():
 
 
 def insert_all_workers(worker_list):
-    url = 'kplanner_service_url/kpdata/workers/' 
+    url = '{}/kpdata/workers/'.format(kplanner_service_url)
     index = 0
     list_to_insert = []
     for worker in worker_list:
@@ -145,7 +145,7 @@ def delete_all_workers():
     kplanner_api.delete_all_workers()
     return
 
-    url = 'kplanner_service_url/kpdata/workers/'  
+    url = '{}/kpdata/workers/'.format(kplanner_service_url)
     response = requests.get(url,  headers={'Content-Type':'application/json',
                 'Authorization': 'Token {}'.format(access_token)}
             )
@@ -158,7 +158,7 @@ def delete_all_workers():
 
     for worker in resp_json :
         print('deleting worker: ',worker) 
-        url = 'kplanner_service_url/kpdata/workers/' + str(worker['worker_code']) + ''
+        url = '{}/kpdata/workers/'.format(kplanner_service_url) + str(worker['worker_code']) + ''
         #print(url)
         response = requests.delete(url,  headers={ 
                 'Authorization': 'Token {}'.format(access_token)}
@@ -257,7 +257,7 @@ def delete_all_orders():
     kplanner_api.delete_all_orders()
     return
 
-    url = 'kplanner_service_url/kpdata/jobs/'   # http://localhost:5000/api/v1/workorder/1'
+    url = '{}/kpdata/jobs/'.format(kplanner_service_url)   # http://localhost:5000/api/v1/workorder/1'
     response = requests.get(url,  headers={'Content-Type':'application/json',
                 'Authorization': 'Token {}'.format(access_token)}
             )
@@ -270,7 +270,7 @@ def delete_all_orders():
 
     for worker in resp_json :
         print('deleting order: ',worker) 
-        url = 'kplanner_service_url/kpdata/jobs/' + str(worker['job_code']) + ''
+        url = '{}/kpdata/jobs/'.format(kplanner_service_url) + str(worker['job_code']) + ''
         print(url)
         response = requests.delete(url,  headers={ 
                 'Authorization': 'Token {}'.format(access_token)}
