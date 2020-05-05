@@ -6,7 +6,26 @@ OSS_LOCAL_STORAGE_PATH = os.getenv('KPLANNER',basedir)
 
 # Get the value of 
 # 'HOME' environment variable  
-DATABASE_URI = os.environ['DATABASE_URL'] 
+# DATABASE_URI = os.environ['DATABASE_URL'] 
+
+POSTGRES_PASSWORD=os.getenv('POSTGRES_PASSWORD')
+POSTGRES_USER=os.getenv('POSTGRES_USER')
+
+POSTGRES_HOST=os.getenv('POSTGRES_HOST')
+POSTGRES_PORT=os.getenv('POSTGRES_PORT')
+POSTGRES_DB=os.getenv('POSTGRES_DB')
+
+# DATABASE_URL=postgres://postgresuser:please_change_your_secret_pass_@postgres:5432/kpdjango
+
+DATABASE_URI="postgres://postgresuser:please_change_your_secret_pass_@postgres:5432/kpdjango".format(
+    POSTGRES_USER,
+    POSTGRES_PASSWORD,
+    POSTGRES_HOST,
+    POSTGRES_PORT,
+    POSTGRES_DB
+)
+
+
 from datetime import datetime  
 
 
@@ -46,10 +65,13 @@ KANDBOX_TEST_WORKING_DIR = '/tmp'
 RL_MAX_EPOCHS = 5
 RL_TRAINING_DAYS = 8
 
-
 OPTI1DAY_AUTOMATIC = False
-RL_PLANNER_AUTOMATIC = True
+if os.getenv('OPTI1DAY_AUTOMATIC',default='False') == 'True':
+    OPTI1DAY_AUTOMATIC=True
 
+RL_PLANNER_AUTOMATIC = False
+if os.getenv('RL_PLANNER_AUTOMATIC',default='False') == 'True':
+    RL_PLANNER_AUTOMATIC=True
 
 SEND_GOOGLE_CALENDAR = False
 google_calendar_token_path = '/tmp/The_Companys/a.token.pickle'

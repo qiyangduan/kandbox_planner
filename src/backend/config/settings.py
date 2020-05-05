@@ -84,8 +84,7 @@ MANAGERS = ADMINS
 
 ADMIN_URL = ""
 
-ADMIN_PASSWORD = 'please_change_your_secret_pass_'
-
+ADMIN_PASSWORD =  env.str('ADMIN_PASSWORD')
 
 
 # DATABASE CONFIGURATION
