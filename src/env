@@ -22,5 +22,6 @@ POSTGRES_HOST=postgres
 
 DATABASE_URL=postgres://postgresuser:please_change_your_secret_pass_@postgres:5432/kpdjango
 
+COMPOSE_PROJECT_NAME=kp
 
 

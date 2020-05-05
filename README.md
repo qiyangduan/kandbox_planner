@@ -41,10 +41,16 @@ It is recommended to use docker version. For more details about installation, cl
 3. If there is no error, you should be able to create a super user with:
 
     ```shell
-    docker-compose run backend python manage.py createsuperuser
+    cd src
+    docker-compose -f prod.yml  run backend python manage.py createsuperuser
     ```
 
-3. Open a browser and visit http://localhost:8000. You can create the rest of users with the super user credential.
+4. Open a browser and visit http://localhost:8000. You can create the rest of users with the super user credential.
+
+5. (optional) To populate sample data, run :
+
+    docker-compose -f prod.yml  run backend python kandbox_planner/fsm_adapter/toy_generator/london_service_generator.py 	<your_access_token>
+
 
 # Keywords
 
