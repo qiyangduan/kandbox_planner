@@ -1,5 +1,6 @@
 <p align="center">
 Reinforcement Learning for Real Time Field Service Scheduling, Dispatching, Planning
+
 ![screenshot](./doc/kandbox_planner_20200505.jpg)
 
 </p>
