@@ -36,7 +36,7 @@ THIRD_PARTY_APPS = [
 ]
 
 LOCAL_APPS = [
-    'apps.users',
+    # 'apps.users',
     "kpdata"
 
 ]
@@ -213,7 +213,7 @@ AUTHENTICATION_BACKENDS = [
 
 # Custom user app defaults
 # Select the correct user model
-AUTH_USER_MODEL = 'users.User'
+# AUTH_USER_MODEL = 'users.User'
 
 
 
@@ -343,11 +343,11 @@ my_menus = [
             'models': [{
                 'name': 'Users',
                 'icon': 'fa fa-user',
-                'url': 'users/user/'
+                'url': 'auth/user/'
             }, {
                 'name': 'Groups',
                 'icon': 'fa fa-users-cog',
-                'url': 'users/group/'
+                'url': 'auth/group/'
             },{
                 'name': 'API Tokens',
                 'icon': 'fas fa-passport',  

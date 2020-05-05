@@ -12,11 +12,11 @@
 
 
 ## Online Demo
-> This is a demo to dispatch services in London area (TO be done).  
+> This is a demo system to dispatch services in London area:
 
 + Address：[https://planner.kandbox.com](https://planner.kandbox.com)
-+ username：demo
-+ password：Demo1234
++ user_email: demo@kandbox.com
++ password: Demo1234
 
 
 Features

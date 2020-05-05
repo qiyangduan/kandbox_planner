@@ -419,7 +419,7 @@ if __name__ == '__main__':
 
     import sys
     
-    if len(sys.argv) < 3:
+    if len(sys.argv) < 2:
         print('I need 1 parameters: python _this_.py token')
 
     token = sys.argv[1] 
