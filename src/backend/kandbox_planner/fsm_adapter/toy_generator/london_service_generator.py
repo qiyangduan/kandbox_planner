@@ -36,6 +36,8 @@ import kandbox_planner.config as config
 
 KANDBOX_DATE_FORMAT = config.KANDBOX_DATE_FORMAT # '%Y%m%d'
 
+import os
+kplanner_service_url =  os.getenv ('kplanner_service_url','http://127.0.0.1:8000')
 
 JOB_GPS_LIST = [ 
         [ '51.447250,-0.189370', '11 Garratt Ln, London SW18 4AQ'],
@@ -112,7 +114,7 @@ def select_all_workers():
 
 
 def insert_all_workers(worker_list):
-    url = 'http://127.0.0.1:8000/kpdata/workers/' 
+    url = 'kplanner_service_url/kpdata/workers/' 
     index = 0
     list_to_insert = []
     for worker in worker_list:
@@ -143,7 +145,7 @@ def delete_all_workers():
     kplanner_api.delete_all_workers()
     return
 
-    url = 'http://127.0.0.1:8000/kpdata/workers/'  
+    url = 'kplanner_service_url/kpdata/workers/'  
     response = requests.get(url,  headers={'Content-Type':'application/json',
                 'Authorization': 'Token {}'.format(access_token)}
             )
@@ -156,7 +158,7 @@ def delete_all_workers():
 
     for worker in resp_json :
         print('deleting worker: ',worker) 
-        url = 'http://127.0.0.1:8000/kpdata/workers/' + str(worker['worker_code']) + ''
+        url = 'kplanner_service_url/kpdata/workers/' + str(worker['worker_code']) + ''
         #print(url)
         response = requests.delete(url,  headers={ 
                 'Authorization': 'Token {}'.format(access_token)}
@@ -255,7 +257,7 @@ def delete_all_orders():
     kplanner_api.delete_all_orders()
     return
 
-    url = 'http://127.0.0.1:8000/kpdata/jobs/'   # http://localhost:5000/api/v1/workorder/1'
+    url = 'kplanner_service_url/kpdata/jobs/'   # http://localhost:5000/api/v1/workorder/1'
     response = requests.get(url,  headers={'Content-Type':'application/json',
                 'Authorization': 'Token {}'.format(access_token)}
             )
@@ -268,7 +270,7 @@ def delete_all_orders():
 
     for worker in resp_json :
         print('deleting order: ',worker) 
-        url = 'http://127.0.0.1:8000/kpdata/jobs/' + str(worker['job_code']) + ''
+        url = 'kplanner_service_url/kpdata/jobs/' + str(worker['job_code']) + ''
         print(url)
         response = requests.delete(url,  headers={ 
                 'Authorization': 'Token {}'.format(access_token)}
