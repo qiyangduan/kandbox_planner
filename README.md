@@ -7,7 +7,7 @@
 
 ---
 <p align="center">
-<a href="./README.md">中文</a> | English
+<a href="./README_cn.md">中文</a> | English
 </p>
 
 
@@ -15,7 +15,7 @@
 > This is a demo system to dispatch services in London area:
 
 + Address：[https://planner.kandbox.com](https://planner.kandbox.com)
-+ user_email: demo@kandbox.com
++ user_email: demo
 + password: Demo1234
 
 
@@ -29,7 +29,7 @@ Features
 
 Get Started
 -----
-It is recommended to use docker version. For more details about installation, click [get_started_locallys](./doc/get_started_locally.md).
+It is recommended to use docker version. For more details about installation, click [get_started_locally](./doc/get_started_locally.md).
 
 1. Prepare linux or macos with docker, docker-compose. This is how to install [docker-compose](https://docs.docker.com/compose/install/)
 2. Run this commond in {KPlanner_HOME}/src folder:
