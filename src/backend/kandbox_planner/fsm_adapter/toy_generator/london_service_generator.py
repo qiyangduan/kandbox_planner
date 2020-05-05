@@ -13,7 +13,7 @@ from kandbox_planner.planner_engine.rl.all_rl_planners import  rl_run_all
 kplanner_db = KPlannerDBAdapter() 
 
 import os
-kplanner_service_url =  os.getenv ('kplanner_service_url','http://127.0.0.1:8000')
+kplanner_service_url =  os.getenv ('DOMAIN','http://127.0.0.1:8000')
 
 
 kplanner_api = KPlannerAPIAdapter(service_url = kplanner_service_url)
