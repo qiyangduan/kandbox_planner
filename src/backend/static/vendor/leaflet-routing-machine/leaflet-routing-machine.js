@@ -17852,7 +17852,7 @@
                 module.exports = L.Class.extend({
                     options: {
                         //serviceUrl: 'https://router.project-osrm.org/route/v1', 
-                        serviceUrl: 'http://demo1.kandbox.com/uk/route/v1',
+                        serviceUrl: 'https://planner.kandbox.com/uk/route/v1',
                         //serviceUrl: 'https://planner.kandbox.com/route/v1', 
                         ///route/v1 //http://localhost:5000
                         profile: 'driving',

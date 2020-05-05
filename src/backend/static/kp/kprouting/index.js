@@ -1,7 +1,7 @@
 var map = L.map('map');
 map.invalidateSize();
 
-L.tileLayer('http://localhost:5008/tile/{z}/{x}/{y}.png', { // 'https://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+L.tileLayer('https://{s}.tile.osm.org/{z}/{x}/{y}.png', { // http://localhost:5008/tile/{z}/{x}/{y}.png', { // 
     attribution: 'openstreetmap.org'
 }).addTo(map);
 
@@ -10,10 +10,8 @@ var routingControl = null
 
 /*       https://a.tile.openstreetmap.org/
 // For MY
-var from_latlng = [3.5245169,	101.90809300000001]
-var to_latlng = [3.2662035,	101.64786009999999]
 
-// For UK
+// Starting, For UK
 var from_latlng = [51.447250, -0.189370]
 var to_latlng = [51.50744689, 0.065910331]
 */
