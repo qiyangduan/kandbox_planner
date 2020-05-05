@@ -1,5 +1,5 @@
 <p align="center">
-<h3>Reinforcement Learning for Real Time Field Service Planning</h3>
+<h2>Reinforcement Learning for Real Time Field Service Planning</h2>
 
 ![screenshot](./doc/kandbox_planner_20200505.jpg)
 
@@ -38,7 +38,13 @@ It is recommended to use docker version. For more details about installation, cl
     docker-compose -f prod.yml build
     docker-compose -f prod.yml up
     ```
-3. Open a browser and visit http://localhost:8000
+3. If there is no error, you should be able to create a super user with:
+
+    ```shell
+    docker-compose run backend python manage.py createsuperuser
+    ```
+
+3. Open a browser and visit http://localhost:8000. You can create the rest of users with the super user credential.
 
 # Keywords
 
@@ -51,16 +57,15 @@ Architecture
 
 
 # Technology Stack
-[Django](https://www.djangoproject.com/) | [Django-SimpleUI](https://github.com/newpanjing/simpleui)
+Frontend UI: [Django](https://www.djangoproject.com/) | [Django-SimpleUI](https://github.com/newpanjing/simpleui/blob/master/doc/en/README_en.md)
 
-[Gym](https://github.com/openai/gym) | [RLLib  for RL](https://docs.ray.io/en/latest/rllib.html) | [Ortools  for Optimization](https://github.com/google/or-tools)
+Backend Algorithm Platform: [Gym](https://github.com/openai/gym) | [RLLib  for RL](https://docs.ray.io/en/latest/rllib.html) | [Ortools  for Optimization](https://github.com/google/or-tools)
 
-
-
+Everything is in python but JS in browser.
 
 
 # TODO
-- Deploy a demo
+- Improve London area dispatching quality
 - Create usage documents
 
 

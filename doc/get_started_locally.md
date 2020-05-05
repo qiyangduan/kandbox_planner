@@ -35,9 +35,16 @@ For demo or testing purpose, you can use free routing service from: https://rout
 
 To change it to another routing service, change configuration from this location: src/backend/static/vendor/leaflet-routing-machine/leaflet-routing-machine.js
 
+## setup pythonpath 
+
+
 # Steps
 ## Install and configure Postgresql database.
 ## Install required python libraries
 As required by file: src/backend/requirements.txt
 
 
+## Populate test dataset in london area
+The token can be acquired from token page.
+
+python ./kandbox_planner/fsm_adapter/toy_generator/london_service_generator.py 	<your_access_token>
