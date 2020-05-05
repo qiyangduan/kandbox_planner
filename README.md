@@ -1,5 +1,7 @@
 <p align="center">
 Reinforcement Learning for Real Time Field Service Scheduling, Dispatching, Planning
+![screenshot](./doc/kandbox_planner_20200505.jpg)
+
 </p>
 
 ---
@@ -9,12 +11,11 @@ Reinforcement Learning for Real Time Field Service Scheduling, Dispatching, Plan
 
 
 ## Online Demo
-> This is a demo to dispatch services in London area.  
+> This is a demo to dispatch services in London area (TO be done).  
 
 + Address：[https://planner.kandbox.com](https://planner.kandbox.com)
 + username：demo
 + password：Demo1234
-
 
 
 Features
@@ -32,10 +33,6 @@ Get Started
     docker-compose -f local.yml up
     ```
 3. Open browser and visit http://localhost:8000
-
-
-
-
 
 # Keywords
 

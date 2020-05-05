@@ -16,3 +16,9 @@ urlpatterns = [
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     path("kpdata/", include("kpdata.urls")),    
 ]
+
+admin.site.site_header = 'Kandbox Planner'                    # default: "Django Administration"
+admin.site.index_title = 'AI Planner'                 # default: "Site administration"
+admin.site.site_title = 'AI Planner by Qiyang' # default: "Django site admin"
+
+

@@ -329,11 +329,14 @@ my_menus = [
             'name': 'Tech',
             'icon': 'fas fa-user-tie',
             'url': '/kpdata/worker/'
-        },
-        {
+        },{
             'name': 'Dairy Event',
             'icon': 'fas fa-plane-departure',
             'url': '/kpdata/workerabsence/'
+        },{
+            'name': 'Planners',
+            'icon': 'fas fa-cogs',
+            'url': 'kpdata/rlplannerparameter/'
         },{
             'app': 'auth',
             'name': 'User Managements',
@@ -365,7 +368,7 @@ my_menus = [
 # 自定义simpleui 菜单
 SIMPLEUI_CONFIG = {
     # 在自定义菜单的基础上保留系统模块
-    'system_keep': True,  # True, False
+    'system_keep': False,  # True, False
     # 'menu_display': ['Visit','Tech', 'Dairy Event', 'User Managements'],  # 'Kpdata', 'Authentication and Authorization'
     'menus': my_menus #[] # 
 } 
