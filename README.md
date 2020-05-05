@@ -49,8 +49,9 @@ It is recommended to use docker version. For more details about installation, cl
 
 5. (optional) To populate sample data, run :
 
+    ```shell
     docker-compose -f prod.yml  run backend python kandbox_planner/fsm_adapter/toy_generator/london_service_generator.py 	<your_access_token>
-
+    ```
 
 # Keywords
 

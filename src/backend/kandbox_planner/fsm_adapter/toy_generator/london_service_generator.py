@@ -11,7 +11,12 @@ from kandbox_planner.planner_engine.opti1day.opti1day_planner import  Opti1DayPl
 from kandbox_planner.planner_engine.rl.all_rl_planners import  rl_run_all
 
 kplanner_db = KPlannerDBAdapter() 
-kplanner_api = KPlannerAPIAdapter()
+
+import os
+kplanner_service_url =  os.getenv ('kplanner_service_url','http://127.0.0.1:8000')
+
+
+kplanner_api = KPlannerAPIAdapter(service_url = kplanner_service_url)
 
 import random
 
@@ -36,8 +41,6 @@ import kandbox_planner.config as config
 
 KANDBOX_DATE_FORMAT = config.KANDBOX_DATE_FORMAT # '%Y%m%d'
 
-import os
-kplanner_service_url =  os.getenv ('kplanner_service_url','http://127.0.0.1:8000')
 
 JOB_GPS_LIST = [ 
         [ '51.447250,-0.189370', '11 Garratt Ln, London SW18 4AQ'],
@@ -114,7 +117,7 @@ def select_all_workers():
 
 
 def insert_all_workers(worker_list):
-    url = '{}/kpdata/workers/'.format(kplanner_service_url)
+    # url = '{}/kpdata/workers/'.format(kplanner_service_url)
     index = 0
     list_to_insert = []
     for worker in worker_list:
@@ -218,8 +221,8 @@ def insert_all_orders(current_day, current_shifts, worker_list):
             #'scheduled_start_minutes':  order[3]  ,  # + ':00'
             'requested_start_datetime':  datetime.strftime(current_day + timedelta(minutes=order[3]),  "%Y-%m-%dT%H:%M:%S"), 
             'scheduled_start_datetime':  datetime.strftime(current_day + timedelta(minutes=order[3]),  "%Y-%m-%dT%H:%M:%S"), 
-            'scheduled_worker_code': 'http://localhost:8000/kpdata/workers/{}/'.format( worker_list [ random.randint(0, 5) ][1]),   
-            'requested_worker_code': 'http://localhost:8000/kpdata/workers/{}/'.format( worker_list [ random.randint(0, 5) ][1]),   
+            'scheduled_worker_code': '{}/kpdata/workers/{}/'.format(kplanner_service_url, worker_list [ random.randint(0, 5) ][1]),   
+            'requested_worker_code': '{}/kpdata/workers/{}/'.format(kplanner_service_url, worker_list [ random.randint(0, 5) ][1]),   
               }
         list_to_insert.append(myobj)
     

@@ -19,16 +19,18 @@ import kandbox_planner.config as config
 
 class KPlannerAPIAdapter:
     # access_token = 0
-    def __init__(self, access_token = None):      
+    def __init__(self, access_token = None, service_url = None):      
         # Create your connection.
         # TODO: use same config.
         self.access_token = access_token
+        self.service_url = service_url
+
 
 
 
 
     def insert_all_workers(self, worker_list):
-        url = "http://127.0.0.1:8000/kpdata/workers/" 
+        url = "{}/kpdata/workers/".format(self.service_url)
 
         for myobj in worker_list:
             #print(myobj)
@@ -44,7 +46,7 @@ class KPlannerAPIAdapter:
 
 
     def delete_all_workers(self):
-        url = "http://127.0.0.1:8000/kpdata/workers/"  
+        url = "{}/kpdata/workers/".format(self.service_url)  
         response = requests.get(url,  headers={'Content-Type':'application/json',
                     'Authorization': 'Token {}'.format(self.access_token)}
                 )
@@ -57,7 +59,7 @@ class KPlannerAPIAdapter:
 
         for worker in resp_json :
             print('deleting worker: ',worker) 
-            url = "http://127.0.0.1:8000/kpdata/workers/" + str(worker['worker_code']) + ""
+            url = "{}/kpdata/workers/".format(self.service_url) + str(worker['worker_code']) + ""
             #print(url)
             response = requests.delete(url,  headers={ 
                     'Authorization': 'Token {}'.format(self.access_token)}
@@ -90,7 +92,7 @@ class KPlannerAPIAdapter:
         return(resp_json)
 
     def insert_all_orders(self, jobs_list):
-        url = "http://127.0.0.1:8000/kpdata/jobs/" 
+        url = "{}/kpdata/jobs/".format(self.service_url) 
         for myobj in jobs_list:
             # print('adding order: ',order)  
             response = requests.post(url, json=myobj, headers={'Content-Type':'application/json',
@@ -103,7 +105,7 @@ class KPlannerAPIAdapter:
     
 
     def delete_all_orders(self):
-        url = "http://127.0.0.1:8000/kpdata/jobs/"   # http://localhost:5000/api/v1/workorder/1"
+        url = "{}/kpdata/jobs/".format(self.service_url)   # http://localhost:5000/api/v1/workorder/1"
         response = requests.get(url,  headers={'Content-Type':'application/json',
                     'Authorization': 'Token {}'.format(self.access_token)}
                 )
@@ -116,7 +118,7 @@ class KPlannerAPIAdapter:
 
         for worker in resp_json :
             print('deleting order: ',worker) 
-            url = "http://127.0.0.1:8000/kpdata/jobs/" + str(worker['job_code']) + ""
+            url = "{}/kpdata/jobs/".format(self.service_url) + str(worker['job_code']) + ""
             print(url)
             response = requests.delete(url,  headers={ 
                     'Authorization': 'Token {}'.format(self.access_token)}
