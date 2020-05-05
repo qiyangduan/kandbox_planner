@@ -57,13 +57,13 @@ class KPlannerHistoryAffinityTopNGMMEnv(gym.Env):
   """
   metadata = {'render.modes': ['human']} 
   config = {
-    'run_mode' : 'normal', # 'replay' for replay Planned jobs, where allows conflicts. "normal" for training new jobs and predict.
-    'planner_code' : 'hist_affinity',
+    'run_mode' : 'predict', # 'replay' for replay Planned jobs, where allows conflicts. "predict" for training new jobs and predict.
+    'planner_code' : 'rl_heur',
     'allow_overtime' : False,
     #
     'nbr_of_observed_workers':6,
     'nbr_of_days_planning_window':2,
-    'data_start_day':'20191105',
+    'data_start_day':'20200501',
     #
 
     'minutes_per_day':60*24,
@@ -76,22 +76,31 @@ class KPlannerHistoryAffinityTopNGMMEnv(gym.Env):
     # each worker is a list of dict, internally transform to : 
     # dictionary ojbect, {job_code: { id , active, level,  gps: [x, y], total_free_duration, free_time_slots: [start, end], },... }
 
+    self.kplanner_db = KPlannerDBAdapter()
+
     if env_config:
       for x in env_config.keys():
         self.config[x]  = env_config[x]
 
+    if from_db:
+      db_config = self.kplanner_db.get_rl_planner_parameter(planner_code = self.config['planner_code'])
+      for x in db_config.keys():
+        self.config[x]  = db_config[x]
+
     if 'data_end_day' in self.config.keys():
       self.config['nbr_of_days_planning_window'] = date_util.days_between_2_day_string(start_day=self.config['data_start_day'], end_day=self.config['data_end_day'])
 
-    self.kplanner_db = KPlannerDBAdapter()
-  
     if from_db:
       workers, workers_id_dict = self.kplanner_db.load_transformed_workers (start_day = self.config['data_start_day']) # ['result'] , nbr_days = self.config['nbr_of_days_planning_window']
       jobs = self.kplanner_db.load_transformed_jobs_current( start_day = self.config['data_start_day'], nbr_days = self.config['nbr_of_days_planning_window'])
+  
+
+    if (len(jobs) < 1) | (len(workers) < 1):
+      print("Error, Loaded no jobs, quitting: ", len(jobs))
+      return
 
     self.workers = workers
     self.jobs = jobs  # list of dict
-
 
     self.workers_dict = {} # Dictionary of dict
     self.jobs_dict = {} # Dictionary of dict

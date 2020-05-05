@@ -1374,6 +1374,25 @@ worker_code, "EmployeeCode",
             'geo_latitude', 'weekly_working_minutes', 'max_conflict_level']], game_info) # , 'organization', 'org_level_1', 'org_level_2', 'org_level_3',
         return
 
+    def get_rl_planner_parameter(self, planner_code = None):   
+        env_config = {}
+        if planner_code is None:
+            return env_config
+        
+        query_sql = '''
+                select * from kpdata_rl_planner_parameter 
+                where planner_code = '{}' '''.format(planner_code) 
+        result = self.cnx.execute(query_sql)
+        for row in result:
+            # THere should be only 1
+            print("planner_code:", row['planner_code'])
+
+            env_config['allow_overtime'] = row['allow_overtime']
+            env_config['nbr_of_observed_workers'] = row['nbr_of_observed_workers']
+            env_config['nbr_of_days_planning_window'] = row['nbr_of_days_planning_window']
+            env_config['data_start_day'] = row['data_start_day']
+            return env_config
+
 
     def get_max_game_code(self):   
         insert_query = '''

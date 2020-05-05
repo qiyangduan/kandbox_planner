@@ -515,8 +515,8 @@ if __name__ == '__main__':
 
 
     opti = Opti1DayPlanner( max_exec_time = config.KANDBOX_OPTI1DAY_EXEC_SECONDS) # 0*60*24
-    ss = config.KANDBOX_TEST_START_DAY
-    ee =  config.KANDBOX_TEST_END_DAY
+    ss = config.KANDBOX_TEST_OPTI1DAY_START_DAY
+    ee =  config.KANDBOX_TEST_OPTI1DAY_END_DAY
     opti.kplanner_db.purge_planner_job_status(planner_code=opti.planner_code,start_date = ss, end_date = ee )
     res = opti.dispatch_jobs( start_date = ss, end_date = ee )
     # pprint(res)

@@ -3,7 +3,8 @@ from import_export import resources
 from import_export.admin import ImportExportModelAdmin, ImportExportActionModelAdmin
 
 
-from .models import Worker, Job, JobStatus, PlannerParameter, WorkerLevel, WorkerSkill, JobChangeHistory, Game, WorkerAbsence
+from .models import Worker, Job, JobStatus, JobChangeHistory, Game, WorkerAbsence
+from .models import  RLPlannerParameter, WorkerLevel, WorkerSkill
 from datetime import datetime, timedelta
 from kandbox_planner import config
 
@@ -18,10 +19,9 @@ from .customized_names import job_names, worker_names, absence_names
 # admin.site.register(Worker)
 # admin.site.register(Job)
 
-
 #admin.site.register(WorkerLevel)
 #admin.site.register(WorkerSkill)
-admin.site.register(PlannerParameter)
+admin.site.register(RLPlannerParameter)
 
 
 import kandbox_planner.util.planner_date_util  as date_util

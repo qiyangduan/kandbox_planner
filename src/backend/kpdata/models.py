@@ -25,6 +25,31 @@ class PlannerParameter(models.Model):
     def __repr__(self):
         return '{}.{}'.format(self.planner_code, self.param_name)  
 
+class RLPlannerParameter(models.Model): 
+    class Meta:
+        db_table = "kpdata_rl_planner_parameter" 
+
+    planner_code = models.CharField(primary_key=True,max_length=250)
+    # 'run_mode' : 'predict', # 'replay' for replay Planned jobs, where allows conflicts. "predict" for training new jobs and predict.
+    planner_env_class = models.CharField(max_length=250 ) # 'hist_affinity',
+    planner_agent_class = models.CharField(max_length=250 ) # 'hist_affinity',
+    allow_overtime = models.BooleanField()
+    #
+    nbr_of_observed_workers = models.IntegerField()
+    nbr_of_days_planning_window = models.IntegerField()
+    data_start_day = models.CharField(max_length=250 ) 
+    # 'reversible' : True, # if yes, I can revert one step back.
+    # 'max_nbr_of_jobs_per_day_worker': 25,
+
+    
+    def __repr__(self):
+        return '{} (starting {} for {} days, observing {} workers)'.format(
+            self.planner_code,
+            self.data_start_day,
+            self.nbr_of_days_planning_window,
+            self.nbr_of_observed_workers,
+        )  
+
 
 class WorkerSkill(models.Model):
     skill_code = models.CharField(primary_key=True, max_length=50 )
@@ -246,15 +271,15 @@ class Job(models.Model):
     requested_worker_code = models.ForeignKey(Worker,null=True,on_delete=models.DO_NOTHING
         , related_name="requested_worker"
         , db_column='requested_worker_code', verbose_name = worker_names['model']['requested_worker_code'])
-    requested_start_datetime = models.DateTimeField(null=True, blank=True, verbose_name='Requested Start')
+    requested_start_datetime = models.DateTimeField(verbose_name='Requested Start') # null=True, blank=True, 
     # requested_start_day = models.CharField(null=True, blank=True, max_length=10)  #Column( Date )  # _yyyymmdd String(16)
     # requested_start_minutes = models.FloatField(null=True, blank=True)  # _yyyymmdd
-    requested_duration_minutes = models.FloatField(null=True, blank=True) 
+    requested_duration_minutes = models.FloatField()  # null=True, blank=True
 
     # primary_worker_code = models.CharField(null=True, blank=True, max_length=250) # N for no-shared, P=Primary, S=Secondary
     location_code =  models.CharField(null=True, blank=True, max_length=250)
-    geo_longitude = models.FloatField(null=True, blank=True) # x
-    geo_latitude = models.FloatField(null=True, blank=True) # y
+    geo_longitude = models.FloatField() # x  null=True, blank=True
+    geo_latitude = models.FloatField() # y  null=True, blank=True
 
     requested_min_level = models.IntegerField(null=True, blank=True)
     requested_skills = models.CharField(null=True, blank=True, max_length=4000) # [1,2,'termite'] 
@@ -277,7 +302,6 @@ class Job(models.Model):
 
     requested_week_days_flag = models.IntegerField(null=True, blank=True) 
     requested_week_days = models.CharField(null=True, blank=True, max_length=100 ) # [1,2]
-
 
     actual_worker_code = models.ForeignKey(Worker,null=True, blank=True,on_delete=models.DO_NOTHING
         , related_name="actual_worker"

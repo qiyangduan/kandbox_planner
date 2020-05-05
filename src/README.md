@@ -21,11 +21,11 @@ If all works well, you should be able to create an admin account with:
 
 
 
-POSTGRES_DB=kpdjango
-POSTGRES_PASSWORD=mysecretpass
-POSTGRES_USER=postgresuser
-POSTGRES_PORT=5432
-POSTGRES_HOST=localhost
+export POSTGRES_DB=kpdjango
+export POSTGRES_PASSWORD=mysecretpass
+export POSTGRES_USER=postgresuser
+export POSTGRES_PORT=5432
+export POSTGRES_HOST=localhost
 export DATABASE_URL="postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}"
 env |grep DATA
 

@@ -84,7 +84,7 @@ MANAGERS = ADMINS
 
 ADMIN_URL = ""
 
-ADMIN_PASSWORD = 'admin'
+ADMIN_PASSWORD = 'please_change_your_secret_pass_'
 
 
 
@@ -341,11 +341,11 @@ my_menus = [
             'models': [{
                 'name': 'Users',
                 'icon': 'fa fa-user',
-                'url': 'auth/user/'
+                'url': 'users/user/'
             }, {
                 'name': 'Groups',
                 'icon': 'fa fa-users-cog',
-                'url': 'auth/group/'
+                'url': 'users/group/'
             },{
                 'name': 'API Tokens',
                 'icon': 'fas fa-passport',  
@@ -365,7 +365,7 @@ my_menus = [
 # 自定义simpleui 菜单
 SIMPLEUI_CONFIG = {
     # 在自定义菜单的基础上保留系统模块
-    'system_keep': False,  # True, False
+    'system_keep': True,  # True, False
     # 'menu_display': ['Visit','Tech', 'Dairy Event', 'User Managements'],  # 'Kpdata', 'Authentication and Authorization'
     'menus': my_menus #[] # 
 } 

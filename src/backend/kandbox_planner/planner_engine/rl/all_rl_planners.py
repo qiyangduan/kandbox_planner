@@ -319,23 +319,17 @@ def run_rl_over_batch(rl_env_name = None, env_config = None, prev_planner_code=N
   return solution_df
 
 
-
-
 def get_rl_planner(planner_code = None, env_config=None, replay=False, predict_unplanned=False):
   current_day_str = env_config['data_start_day']
-
-  workers, workers_id_dict = kplanner_db.load_transformed_workers (start_day = current_day_str) # ['result'] , nbr_days = 1
-  jobs = kplanner_db.load_transformed_jobs_current(start_day = current_day_str, nbr_days = env_config['nbr_of_days_planning_window'])
+  #workers, workers_id_dict = kplanner_db.load_transformed_workers (start_day = current_day_str) # ['result'] , nbr_days = 1
+  #jobs = kplanner_db.load_transformed_jobs_current(start_day = current_day_str, nbr_days = env_config['nbr_of_days_planning_window'])
   env_config['kplanner_db'] = kplanner_db
   
   print("I am predicting for day:", current_day_str )
   # print(jobs)
-  if len(jobs) < 1:
-    print("Loaded no jobs, quitting: ", len(jobs))
-    return {}
   # ricnenv.KPRL5Minutes2WorkerTime
   # TODO: add to env config. , allow_overtime=True,  max_nbr_of_worker = len(workers) env.run_mode = 'predict'
-  env = kp_models[planner_code]['planner_env_class'](workers=workers, jobs=jobs, env_config=env_config)
+  env = kp_models[planner_code]['planner_env_class']( env_config=env_config, from_db=True )
   
   model_agent = kp_models[planner_code]['planner_agent_class'](env=env,nbr_of_actions = 2)
   model_agent.load_model(filename = "{}/trained_model_{}_model.h5".format(working_dir, planner_code))
