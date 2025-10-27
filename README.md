@@ -77,4 +77,5 @@ Everything is in python but JS in browser.
 
 
 # Known Issues
-## long time no update
+# Currently only services 25% of major London areas
+# Services can be overloaded by too many services in planning
