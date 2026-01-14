@@ -44,7 +44,7 @@ Werkzeug==1.0.1
 
 # Django REST Framework
 
-djangorestframework==3.11.0
+djangorestframework==3.11.2
 
 
 
